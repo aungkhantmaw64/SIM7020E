@@ -4,11 +4,6 @@ This is the SIMCom SIM7020E Library For Arduino.
 
 <a href="https://store.ais.co.th/th/devio-nb-devkit-i.html"><img src="assets/images/devio_kit.png" height="300"/></a>
 
-## Architecture
-
-## Test Cases
-### `SIM7020.h`
-
 ## License
 ---
 Copyright (c) 2018 Arduino SA. All rights reserved.

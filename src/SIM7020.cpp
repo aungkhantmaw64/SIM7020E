@@ -50,10 +50,15 @@ void SIM7020::begin(unsigned long baudrate, bool restart)
     begin(baudrate);
     if (restart)
     {
-        digitalWrite(resetPin_, HIGH);
-        delay_ms(48);
-        digitalWrite(resetPin_, LOW);
+        hardReset();
     }
+}
+
+void SIM7020::hardReset(void)
+{
+    digitalWrite(resetPin_, HIGH);
+    delay_ms(48);
+    digitalWrite(resetPin_, LOW);
 }
 
 void SIM7020::sendATCommand(const char *cmd)

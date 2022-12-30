@@ -70,6 +70,11 @@ public:
     /**
      * @brief
      *
+     */
+    void hardReset(void);
+    /**
+     * @brief
+     *
      * @return true
      * @return false
      */
