@@ -62,6 +62,27 @@ void SIM7020::sendATCommand(const char *cmd)
     serial_->print(cmd);
 }
 
+ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &responseBufferStorage)
+{
+    responseBufferStorage = "";
+    unsigned long startTime = getMillis();
+    while ((getMillis() - startTime) < timeout)
+    {
+        if (serial_->available())
+        {
+            responseBufferStorage += (char)serial_->read();
+        }
+    }
+    if (responseBufferStorage.length() == 0)
+        return TimeoutError;
+    else if (responseBufferStorage.indexOf("OK") != -1)
+        return CommandSuccess;
+    else if (responseBufferStorage.indexOf("ERROR") != -1)
+        return InvalidCommand;
+    else
+        return UnknownStatus;
+}
+
 SIM7020::~SIM7020()
 {
 }

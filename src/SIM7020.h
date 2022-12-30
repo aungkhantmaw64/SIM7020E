@@ -32,7 +32,7 @@ public:
     void begin(unsigned long baudrate);
     void begin(unsigned long baudrate, bool restart);
     void sendATCommand(const char *cmd);
-    ATResponseStatus waitForResponse(unsigned long timeout, String *responseBufferStorage);
+    ATResponseStatus waitForResponse(unsigned long timeout, String &responseBufferStorage);
     void end(void);
 };
 
