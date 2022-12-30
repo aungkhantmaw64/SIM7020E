@@ -118,4 +118,18 @@ unittest(ModemReturnsCorrectReponseStatuses)
     assertEqual("\r\n@3s#fsfs@\r\n", responseBufferstorage);
 }
 
+unittest(ModemIsReady)
+{
+    state->serialPort[0].dataIn = "\r\nOK\r\n";
+    assertEqual(true, gmodem->ready());
+    assertEqual("AT\r", state->serialPort[0].dataOut);
+}
+
+unittest(ModemIsNotReady)
+{
+    state->serialPort[0].dataIn = "";
+    assertEqual(false, gmodem->ready());
+    assertEqual("AT\r", state->serialPort[0].dataOut);
+}
+
 unittest_main()

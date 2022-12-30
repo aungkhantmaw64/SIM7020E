@@ -83,6 +83,12 @@ ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &respons
         return UnknownStatus;
 }
 
+bool SIM7020::ready(void)
+{
+    sendATCommand("AT\r");
+    return (CommandSuccess == waitForResponse(300, responseBuffer_));
+}
+
 SIM7020::~SIM7020()
 {
 }

@@ -20,6 +20,7 @@ private:
     int resetPin_;
     int pwrKeyPin_;
     int rtcEintPin_;
+    String responseBuffer_;
 
 public:
     SIM7020(HardwareSerial *serial,
@@ -32,6 +33,7 @@ public:
     void begin(unsigned long baudrate);
     void begin(unsigned long baudrate, bool restart);
     void sendATCommand(const char *cmd);
+    bool ready(void);
     ATResponseStatus waitForResponse(unsigned long timeout, String &responseBufferStorage);
     void end(void);
 };
