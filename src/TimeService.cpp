@@ -15,13 +15,9 @@ unsigned long getMillis(void)
 unsigned long getMillis(void)
 {
     if (start < 10000UL)
-    {
         start += step;
-    }
     else
-    {
         start = 0;
-    }
     return start;
 }
 

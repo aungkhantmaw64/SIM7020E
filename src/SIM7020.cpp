@@ -7,7 +7,7 @@
 
 #define SIM7020_DEFAULT_BAUD 115200
 
-static inline void setPinActiveLow(int pin)
+static inline void setPinOutputLOW(int pin)
 {
     if (pin >= 0)
     {
@@ -29,9 +29,9 @@ SIM7020::SIM7020(HardwareSerial *serial, int resetPin, int pwrKeyPin, int rtcEin
       pwrKeyPin_(pwrKeyPin),
       rtcEintPin_(rtcEintPin)
 {
-    setPinActiveLow(resetPin_);
-    setPinActiveLow(pwrKeyPin_);
-    setPinActiveLow(rtcEintPin_);
+    setPinOutputLOW(resetPin_);
+    setPinOutputLOW(pwrKeyPin_);
+    setPinOutputLOW(rtcEintPin_);
 }
 
 SIM7020::SIM7020(HardwareSerial *serial, int resetPin)
