@@ -72,4 +72,17 @@ unittest(BeginSucceeds_RestartEnabled)
     }
 }
 
+unittest(ATCommandSends)
+{
+    GodmodeState *state = GODMODE();
+    state->reset();
+
+    SIM7020 *module = new SIM7020(&Serial, 27);
+    module->begin(115200, true);
+    module->sendATCommand("AT\r");
+    delete module;
+
+    assertEqual("AT\r", state->serialPort[0].dataOut);
+}
+
 unittest_main()

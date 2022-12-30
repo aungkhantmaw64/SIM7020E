@@ -16,6 +16,13 @@ static inline void setPinActiveLow(int pin)
     }
 }
 
+static inline void delay_ms(unsigned long milliseconds)
+{
+    unsigned long startTime = getMillis();
+    while ((getMillis() - startTime) < 48)
+        ;
+}
+
 SIM7020::SIM7020(HardwareSerial *serial, int resetPin, int pwrKeyPin, int rtcEintPin)
     : serial_(serial),
       resetPin_(resetPin),
@@ -44,11 +51,15 @@ void SIM7020::begin(unsigned long baudrate, bool restart)
     if (restart)
     {
         digitalWrite(resetPin_, HIGH);
-        unsigned long startTime = getMillis();
-        while ((getMillis() - startTime) < 48)
-            ;
+        delay_ms(48);
         digitalWrite(resetPin_, LOW);
     }
+}
+
+void SIM7020::sendATCommand(const char *cmd)
+{
+    delay_ms(20);
+    serial_->print(cmd);
 }
 
 SIM7020::~SIM7020()
