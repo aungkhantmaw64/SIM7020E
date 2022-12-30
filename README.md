@@ -1,11 +1,13 @@
-# SIM7020E Library For Arduino [![Arduino CI](https://github.com/aungkhantmaw64/SIM7020E/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/aungkhantmaw64/SIM7020E/actions)
+# SIMCom SIM7020E [![Arduino CI](https://github.com/aungkhantmaw64/SIM7020E/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/aungkhantmaw64/SIM7020E/actions)
 
-This repo is currently under development
+This is the SIMCom SIM7020E Library For Arduino.
+
+<a href="https://store.ais.co.th/th/devio-nb-devkit-i.html"><img src="assets/images/devio_kit.png" height="300"/></a>
 
 ## Architecture
 
 ## Test Cases
-### SIM7020
+### `SIM7020.h`
 
 ## License
 ---
