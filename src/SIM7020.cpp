@@ -3,6 +3,7 @@
 #define __ASSERT_USE_STDERR
 
 #include <assert.h>
+#include "TimeService.h"
 
 #define SIM7020_DEFAULT_BAUD 115200
 
@@ -43,7 +44,9 @@ void SIM7020::begin(unsigned long baudrate, bool restart)
     if (restart)
     {
         digitalWrite(resetPin_, HIGH);
-        delay(48);
+        unsigned long startTime = getMillis();
+        while ((getMillis() - startTime) < 48)
+            ;
         digitalWrite(resetPin_, LOW);
     }
 }

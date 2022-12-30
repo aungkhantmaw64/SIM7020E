@@ -5,6 +5,14 @@
 #include <HardwareSerial.h>
 #include <Client.h>
 
+typedef enum ATResponseStatus
+{
+    UnknownStatus = -1,
+    InvalidCommand = 0,
+    TimeoutError,
+    CommandSuccess,
+} ATResponseStatus_t;
+
 class SIM7020
 {
 private:
@@ -23,6 +31,8 @@ public:
     ~SIM7020();
     void begin(unsigned long baudrate);
     void begin(unsigned long baudrate, bool restart);
+    void sendATCommand(const char *cmd);
+    ATResponseStatus waitForResponse(unsigned long timeout, String *responseBufferStorage);
     void end(void);
 };
 
