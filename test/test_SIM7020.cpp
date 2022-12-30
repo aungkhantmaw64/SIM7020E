@@ -7,57 +7,69 @@
 #define DEFAULT_RTCEINT_PIN 4
 #define DEFAULT_BAUDRATE 115200
 
-static GodmodeState *state = NULL;
-static SIM7020 *module = new SIM7020(&Serial1,
-                                     DEFAULT_RESET_PIN,
-                                     DEFAULT_POWERKEY_PIN,
-                                     DEFAULT_RTCEINT_PIN);
-
-unittest_setup()
+unittest(PinsAreLOW_AfterDefaultInitialization)
 {
-    /* Mock object intialization */
-    state = GODMODE();
-    state->reset();
-    state->resetClock();
-    state->resetPins();
-
+    /* Initialize mock objects */
+    GodmodeState *state = GODMODE();
     state->digitalPin[DEFAULT_RESET_PIN] = HIGH;
     state->digitalPin[DEFAULT_POWERKEY_PIN] = HIGH;
     state->digitalPin[DEFAULT_RTCEINT_PIN] = HIGH;
-}
 
-unittest_teardown()
-{
-}
+    /* Initialize module under test */
 
-unittest(ConstructorInitalization_PutAllTheModemPinsToLowState)
-{
-    int resetPin = 27;
-    int pwrKeyPin = 26;
-    int rtcEintPin = 4;
+    SIM7020 *module = new SIM7020(&Serial, 27, 26, 4);
 
-    SIM7020(&Serial1,
-            resetPin,
-            pwrKeyPin,
-            rtcEintPin);
-
+    /* Assertions */
     assertEqual(LOW, state->digitalPin[DEFAULT_RESET_PIN]);
     assertEqual(LOW, state->digitalPin[DEFAULT_POWERKEY_PIN]);
     assertEqual(LOW, state->digitalPin[DEFAULT_RTCEINT_PIN]);
+
+    delete module;
 }
 
-unittest(MinimumInitalizationSucceeds_PutResetPinToLowState)
+unittest(OnlyResetPinsStateChangeToLow_AfterMinimumInitialization)
 {
-    int resetPin = 27;
-    SIM7020(&Serial1,
-            resetPin);
+    /* Initialize mock objects */
+    GodmodeState *state = GODMODE();
+    state->digitalPin[DEFAULT_RESET_PIN] = HIGH;
+    state->digitalPin[DEFAULT_POWERKEY_PIN] = HIGH;
+    state->digitalPin[DEFAULT_RTCEINT_PIN] = HIGH;
 
+    SIM7020 *module = new SIM7020(&Serial, 27);
+
+    /* Assertions */
     assertEqual(LOW, state->digitalPin[DEFAULT_RESET_PIN]);
+    assertEqual(HIGH, state->digitalPin[DEFAULT_POWERKEY_PIN]);
+    assertEqual(HIGH, state->digitalPin[DEFAULT_RTCEINT_PIN]);
+
+    delete module;
 }
 
-unittest(BeginSucceeds_BaudrateMatchWithModem)
+unittest(ThisTestFails_WhenBaudrateDoesntMatchWithModem)
 {
+    SIM7020 *module = new SIM7020(&Serial, 27);
     module->begin(115200);
+    delete module;
+}
+
+unittest(BeginSucceeds_RestartEnabled)
+{
+    GodmodeState *state = GODMODE();
+    state->reset();
+
+    SIM7020 *module = new SIM7020(&Serial, 27);
+    module->begin(115200, true);
+    delete module;
+
+    bool actual[4];
+    bool expected[4] = {LOW, LOW, HIGH, LOW};
+    int numMoved = state->digitalPin[DEFAULT_RESET_PIN].toArray(actual, 4);
+    assertEqual(4, numMoved);
+
+    for (int i = 0; i < 2; i++)
+    {
+        assertEqual(expected[i], actual[i]);
+    }
 }
 
 unittest_main()

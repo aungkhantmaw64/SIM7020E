@@ -37,6 +37,17 @@ void SIM7020::begin(unsigned long baudrate)
     serial_->begin(baudrate);
 }
 
+void SIM7020::begin(unsigned long baudrate, bool restart)
+{
+    begin(baudrate);
+    if (restart)
+    {
+        digitalWrite(resetPin_, HIGH);
+        delay(48);
+        digitalWrite(resetPin_, LOW);
+    }
+}
+
 SIM7020::~SIM7020()
 {
 }
