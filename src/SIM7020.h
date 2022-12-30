@@ -7,9 +7,22 @@
 
 class SIM7020
 {
+private:
+    HardwareSerial* serial_;
+    int resetPin_;
+    int pwrKeyPin_;
+    int rtcEintPin_;
+
 public:
-    SIM7020(HardwareSerial &serial, unsigned long baudrate, int resetPin);
+    SIM7020(HardwareSerial *serial, 
+            int resetPin,
+            int pwrKeyPin,
+            int rtcEintPin);
+    SIM7020(HardwareSerial *serial,
+            int resetPin);
     ~SIM7020();
+    void begin(unsigned long baudrate);
+    void end(void);
 };
 
 #endif
