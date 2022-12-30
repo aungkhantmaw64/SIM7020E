@@ -23,18 +23,69 @@ private:
     String responseBuffer_;
 
 public:
+    /**
+     * @brief Construct a new SIM7020 object
+     *
+     * @param serial
+     * @param resetPin
+     * @param pwrKeyPin
+     * @param rtcEintPin
+     */
     SIM7020(HardwareSerial *serial,
             int resetPin,
             int pwrKeyPin,
             int rtcEintPin);
+    /**
+     * @brief Construct a new SIM7020 object
+     *
+     * @param serial
+     * @param resetPin
+     */
     SIM7020(HardwareSerial *serial,
             int resetPin);
+    /**
+     * @brief Destroy the SIM7020 object
+     *
+     */
     ~SIM7020();
+    /**
+     * @brief
+     *
+     * @param baudrate
+     */
     void begin(unsigned long baudrate);
+    /**
+     * @brief
+     *
+     * @param baudrate
+     * @param restart
+     */
     void begin(unsigned long baudrate, bool restart);
+    /**
+     * @brief
+     *
+     * @param cmd
+     */
     void sendATCommand(const char *cmd);
+    /**
+     * @brief
+     *
+     * @return true
+     * @return false
+     */
     bool ready(void);
+    /**
+     * @brief
+     *
+     * @param timeout
+     * @param responseBufferStorage
+     * @return ATResponseStatus
+     */
     ATResponseStatus waitForResponse(unsigned long timeout, String &responseBufferStorage);
+    /**
+     * @brief
+     *
+     */
     void end(void);
 };
 
