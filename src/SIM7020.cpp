@@ -49,9 +49,15 @@ void SIM7020::begin(unsigned long baudrate, bool restart)
 {
     begin(baudrate);
     if (restart)
-    {
         hardReset();
-    }
+}
+
+void SIM7020::turnPowerOn(void)
+{
+    digitalWrite(pwrKeyPin_, LOW);
+    delay_ms(1000);
+    digitalWrite(pwrKeyPin_, HIGH);
+    delay_ms(2000);
 }
 
 void SIM7020::hardReset(void)
@@ -65,6 +71,8 @@ void SIM7020::sendATCommand(const char *cmd)
 {
     delay_ms(20);
     serial_->print(cmd);
+    serial_->print('\r');
+    serial_->flush();
 }
 
 ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &responseBufferStorage)
@@ -74,15 +82,13 @@ ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &respons
     while ((getMillis() - startTime) < timeout)
     {
         if (serial_->available())
-        {
             responseBufferStorage += (char)serial_->read();
-        }
     }
     if (responseBufferStorage.length() == 0)
         return TimeoutError;
-    else if (responseBufferStorage.indexOf("OK") != -1)
+    else if (responseBufferStorage.lastIndexOf("OK\r\n") != -1)
         return CommandSuccess;
-    else if (responseBufferStorage.indexOf("ERROR") != -1)
+    else if (responseBufferStorage.lastIndexOf("ERROR\r\n") != -1)
         return InvalidCommand;
     else
         return UnknownStatus;
@@ -90,8 +96,10 @@ ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &respons
 
 bool SIM7020::ready(void)
 {
-    sendATCommand("AT\r");
-    return (CommandSuccess == waitForResponse(300, responseBuffer_));
+    String response;
+    response.reserve(20);
+    sendATCommand("AT");
+    return (CommandSuccess == waitForResponse(300, response));
 }
 
 SIM7020::~SIM7020()

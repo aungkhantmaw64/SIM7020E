@@ -20,7 +20,6 @@ private:
     int resetPin_;
     int pwrKeyPin_;
     int rtcEintPin_;
-    String responseBuffer_;
 
 public:
     /**
@@ -72,6 +71,17 @@ public:
      *
      */
     void hardReset(void);
+
+    /**
+     * @brief
+     *
+     */
+    void turnPowerOn(void);
+    /**
+     * @brief
+     *
+     */
+    void turnPowerOff(void);
     /**
      * @brief
      *
