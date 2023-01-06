@@ -6,6 +6,7 @@
 #include "TimeService.h"
 
 #define SIM7020_DEFAULT_BAUD 115200
+#define TYPICAL_IMEI_LENGTH 15
 
 static inline void setPinOutputLOW(int pin)
 {
@@ -100,6 +101,15 @@ bool SIM7020::ready(void)
     response.reserve(20);
     sendATCommand("AT");
     return (CommandSuccess == waitForResponse(300, response));
+}
+
+String SIM7020::getIMEI(void)
+{
+    String imei;
+    imei.reserve(20);
+    waitForResponse(300, imei);
+    imei.trim();
+    return imei.substring(0, TYPICAL_IMEI_LENGTH);
 }
 
 SIM7020::~SIM7020()

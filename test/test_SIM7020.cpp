@@ -146,4 +146,11 @@ unittest(PowerOnModemByHardwarePin)
     }
 }
 
+unittest(GetIMEI)
+{
+    state->serialPort[0].dataIn = "\r\n123456789012345\r\n\r\nOK\r\n";
+    String imei;
+    assertEqual("123456789012345", gmodem->getIMEI());
+}
+
 unittest_main()

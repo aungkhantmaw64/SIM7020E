@@ -100,6 +100,18 @@ public:
     /**
      * @brief
      *
+     * @return String
+     */
+    String getIMEI(void);
+    /**
+     * @brief
+     *
+     * @return String
+     */
+    String getICCID(void);
+    /**
+     * @brief
+     *
      */
     void end(void);
 };
