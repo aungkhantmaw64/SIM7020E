@@ -85,7 +85,7 @@ unittest(BeginSucceeds_RestartEnabled)
 unittest(ATCommandSends)
 {
     gmodem->begin(115200, true);
-    gmodem->sendATCommand("AT\r");
+    gmodem->sendATCommand("AT");
 
     assertEqual("AT\r", state->serialPort[0].dataOut);
 }
@@ -130,6 +130,20 @@ unittest(ModemIsNotReady)
     state->serialPort[0].dataIn = "";
     assertEqual(false, gmodem->ready());
     assertEqual("AT\r", state->serialPort[0].dataOut);
+}
+
+unittest(PowerOnModemByHardwarePin)
+{
+    gmodem->turnPowerOn();
+    bool actual[4];
+    bool expected[4] = {LOW, LOW, LOW, HIGH};
+    int numMoved = state->digitalPin[DEFAULT_POWERKEY_PIN].toArray(actual, 4);
+
+    assertEqual(4, numMoved);
+    for (auto i{0}; i < 4; i++)
+    {
+        assertEqual(expected[i], actual[i]);
+    }
 }
 
 unittest_main()
