@@ -8,6 +8,6 @@ services:
       dockerfile: arduino-ci.Dockerfile
     volumes:
       - .:/home/work
-    command: bash ./scripts/test.sh
+    command: bash ./scripts/testAndBuild.sh
     tty: true
     container_name: arduino_ci
