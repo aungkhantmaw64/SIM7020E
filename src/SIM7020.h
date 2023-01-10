@@ -22,6 +22,13 @@ private:
     int rtcEintPin_;
     String resBuffer_;
 
+    void setEchoOff(void)
+    {
+        resBuffer_ = "";
+        sendATCommand("ATE0");
+        waitForResponse(300, resBuffer_);
+    };
+
 public:
     /**
      * @brief Construct a new SIM7020 object

@@ -38,6 +38,7 @@ void SIM7020::begin(bool restart)
     {
         hardReset();
     }
+    setEchoOff();
 }
 
 void SIM7020::turnPowerOn(void)
@@ -93,9 +94,6 @@ bool SIM7020::ready(void)
 
 String SIM7020::getIMEI(void)
 {
-    resBuffer_ = "";
-    sendATCommand("ATE0");
-    waitForResponse(300, resBuffer_);
     resBuffer_ = "";
     sendATCommand("AT+GSN");
     int ret = waitForResponse(300, resBuffer_);

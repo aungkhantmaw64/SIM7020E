@@ -107,4 +107,11 @@ unittest(ModemHardwareConnectedCorrectly_NowReady)
     assertEqual(state->serialPort[0].dataOut, "AT\r");
 }
 
+unittest(IMEIExtractedFromRawResponseText)
+{
+    state->serialPort[0].dataIn = "\r\n123456789012345\r\nOK\r\n";
+
+    assertEqual("123456789012345", modem.getIMEI());
+}
+
 unittest_main()
