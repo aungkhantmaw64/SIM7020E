@@ -1,33 +1,28 @@
 #include <Arduino.h>
 #include <ArduinoUnitTests.h>
 #include "SIM7020.h"
+#include "TimeService.h"
 
 #define DEFAULT_RESET_PIN (int)(27)
 #define DEFAULT_POWERKEY_PIN (int)(26)
 #define DEFAULT_RTCEINT_PIN (int)(4)
 #define DEFAULT_BAUDRATE (unsigned long)(115200)
 
-class MockSerial : public Stream
+static unsigned long start = 0;
+static unsigned long step = 1;
+
+#ifdef MOCK_PINS_COUNT
+unsigned long getMillis(void)
 {
-private:
-    unsigned long baudrate;
+    if (start < 10000UL)
+        start += step;
+    else
+        start = 0;
+    return start;
+}
+#endif
 
-public:
-    MockSerial()
-    {
-    }
-    ~MockSerial()
-    {
-    }
-    unsigned long getBaudrate(void)
-    {
-        return baudrate;
-    }
-};
-
-static MockSerial mock_serial;
-
-static SIM7020 modem(mock_serial,
+static SIM7020 modem(Serial,
                      DEFAULT_RESET_PIN,
                      DEFAULT_POWERKEY_PIN,
                      DEFAULT_RTCEINT_PIN);
@@ -38,6 +33,7 @@ unittest_setup()
 {
     state = GODMODE();
     state->reset();
+    state->resetClock();
 }
 
 unittest_teardown()
@@ -62,6 +58,24 @@ unittest(BeginTurnsModemPowerOn_IgnoreRestart)
     {
         assertEqual(expectedPinStates[index], actualPinStates[index]);
     }
+}
+
+unittest(SendATCommand_CarriageReturnAppendedAutomatically)
+{
+    modem.sendATCommand("AT");
+
+    assertEqual(state->serialPort[0].dataOut, "AT\r");
+}
+
+unittest(CommandSentSuccesfully_ModemRepondSuccessCode)
+{
+    state->serialPort[0].dataIn = "\r\nOK\r\n";
+
+    String response;
+    int retCode = modem.waitForResponse(300, response);
+
+    assertEqual(CommandSuccess, retCode);
+    assertEqual("\r\nOK\r\n", response);
 }
 
 unittest_main()
