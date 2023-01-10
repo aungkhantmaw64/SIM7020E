@@ -15,7 +15,7 @@ static inline void delay_ms(unsigned long milliseconds)
         ;
 }
 
-SIM7020::SIM7020(HardwareSerial &serial, int resetPin, int pwrKeyPin, int rtcEintPin)
+SIM7020::SIM7020(Stream &serial, int resetPin, int pwrKeyPin, int rtcEintPin)
     : serial_(&serial),
       resetPin_(resetPin),
       pwrKeyPin_(pwrKeyPin),
@@ -24,22 +24,18 @@ SIM7020::SIM7020(HardwareSerial &serial, int resetPin, int pwrKeyPin, int rtcEin
     pinMode(pwrKeyPin_, OUTPUT);
 }
 
-SIM7020::SIM7020(HardwareSerial &serial, int resetPin)
+SIM7020::SIM7020(Stream &serial, int resetPin)
     : SIM7020(serial, resetPin, -1, -1)
 {
 }
 
 void SIM7020::begin(bool restart)
 {
+    turnPowerOn();
     if (restart)
     {
         hardReset();
     }
-    serial_->begin(115200);
-    turnPowerOn();
-    sendATCommand("ATE0");
-    String response;
-    waitForResponse(300, response);
 }
 
 void SIM7020::turnPowerOn(void)
@@ -99,6 +95,9 @@ String SIM7020::getIMEI(void)
 {
     String imei;
     imei.reserve(100);
+    sendATCommand("ATE0");
+    String response;
+    waitForResponse(300, response);
     sendATCommand("AT+GSN");
     int ret = waitForResponse(300, imei);
     if (ret == CommandSuccess)

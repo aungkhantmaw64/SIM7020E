@@ -16,7 +16,7 @@ typedef enum ATResponseStatus
 class SIM7020
 {
 private:
-    HardwareSerial *serial_;
+    Stream *serial_;
     int resetPin_;
     int pwrKeyPin_;
     int rtcEintPin_;
@@ -30,7 +30,7 @@ public:
      * @param pwrKeyPin
      * @param rtcEintPin
      */
-    SIM7020(HardwareSerial &serial,
+    SIM7020(Stream &serial,
             int resetPin,
             int pwrKeyPin,
             int rtcEintPin);
@@ -40,7 +40,7 @@ public:
      * @param serial
      * @param resetPin
      */
-    SIM7020(HardwareSerial &serial,
+    SIM7020(Stream &serial,
             int resetPin);
     /**
      * @brief Destroy the SIM7020 object
