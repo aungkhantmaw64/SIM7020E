@@ -88,4 +88,14 @@ unittest(ModemRespondsNothing_TimeoutOccurs)
     assertEqual(TimeoutError, retCode);
     assertEqual("", response);
 }
+
+unittest(BufferSizeNotEnoughForResponse_CauseUnknownError)
+{
+    state->serialPort[0].dataIn = "\r\n01234567891011113\r\n01234567891011113";
+
+    String response;
+    response.reserve(20);
+    int retCode = modem.waitForResponse(300, response);
+    assertEqual(UnknownStatus, retCode);
+}
 unittest_main()
