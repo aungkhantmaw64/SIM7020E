@@ -12,6 +12,7 @@ void setup()
 {
     Serial.begin(115200);
     Serial.println("Rebooting...");
+    Serial2.begin(115200);
     String response;
     response.reserve(100);
     module.begin(false);
