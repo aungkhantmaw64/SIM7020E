@@ -2,10 +2,8 @@ compile:
   libraries: ~
   platforms:
     - mega2560
-    - esp32
 
 unittest:
   libraries: ~
   platforms:
     - mega2560
-    - esp32
