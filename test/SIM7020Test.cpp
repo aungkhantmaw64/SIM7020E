@@ -78,4 +78,14 @@ unittest(CommandSentSuccesfully_ModemRepondSuccessCode)
     assertEqual("\r\nOK\r\n", response);
 }
 
+unittest(ModemRespondsNothing_TimeoutOccurs)
+{
+    state->serialPort[0].dataIn = "";
+
+    String response;
+    int retCode = modem.waitForResponse(300, response);
+
+    assertEqual(TimeoutError, retCode);
+    assertEqual("", response);
+}
 unittest_main()
