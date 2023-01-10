@@ -1,8 +1,5 @@
 #include "TimeService.h"
 
-static unsigned long start = 0;
-static unsigned long step = 1;
-
 #ifndef MOCK_PINS_COUNT
 
 unsigned long getMillis(void)
@@ -11,6 +8,9 @@ unsigned long getMillis(void)
 }
 
 #else
+
+static unsigned long start = 0;
+static unsigned long step = 1;
 
 unsigned long getMillis(void)
 {
