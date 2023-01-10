@@ -1,5 +1,5 @@
-#ifndef D_BC95_H
-#define D_BC95_H
+#ifndef D_SIM7020_H
+#define D_SIM7020_H
 
 #include <Arduino.h>
 #include <HardwareSerial.h>
