@@ -20,6 +20,7 @@ private:
     int resetPin_;
     int pwrKeyPin_;
     int rtcEintPin_;
+    String resBuffer_;
 
 public:
     /**

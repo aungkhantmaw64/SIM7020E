@@ -7,6 +7,7 @@
 
 #define SIM7020_DEFAULT_BAUD 115200
 #define TYPICAL_IMEI_LENGTH 15
+#define RESPONSE_BUFFER_SIZE 200
 
 static inline void delay_ms(unsigned long milliseconds)
 {
@@ -21,6 +22,7 @@ SIM7020::SIM7020(Stream &serial, int resetPin, int pwrKeyPin, int rtcEintPin)
       pwrKeyPin_(pwrKeyPin),
       rtcEintPin_(rtcEintPin)
 {
+    resBuffer_.reserve(RESPONSE_BUFFER_SIZE);
     pinMode(pwrKeyPin_, OUTPUT);
 }
 
@@ -85,27 +87,28 @@ ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &respons
 
 bool SIM7020::ready(void)
 {
-    String response;
-    response.reserve(20);
     sendATCommand("AT");
-    return (CommandSuccess == waitForResponse(300, response));
+    return (CommandSuccess == waitForResponse(300, resBuffer_));
 }
 
 String SIM7020::getIMEI(void)
 {
-    String imei;
-    imei.reserve(100);
+    resBuffer_ = "";
     sendATCommand("ATE0");
-    String response;
-    waitForResponse(300, response);
+    waitForResponse(300, resBuffer_);
+    resBuffer_ = "";
     sendATCommand("AT+GSN");
-    int ret = waitForResponse(300, imei);
-    if (ret == CommandSuccess)
+    int ret = waitForResponse(300, resBuffer_);
+    switch (ret)
     {
-        imei.trim();
-        return imei.substring(0, TYPICAL_IMEI_LENGTH);
+    case CommandSuccess:
+        resBuffer_.trim();
+        return resBuffer_.substring(0, TYPICAL_IMEI_LENGTH);
+        break;
+
+    default:
+        return "";
     }
-    return "";
 }
 
 SIM7020::~SIM7020()
