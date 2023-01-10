@@ -98,4 +98,13 @@ unittest(BufferSizeNotEnoughForResponse_CauseUnknownError)
     int retCode = modem.waitForResponse(300, response);
     assertEqual(UnknownStatus, retCode);
 }
+
+unittest(ModemHardwareConnectedCorrectly_NowReady)
+{
+    state->serialPort[0].dataIn = "\r\nOK\r\n";
+
+    assertTrue(modem.ready());
+    assertEqual(state->serialPort[0].dataOut, "AT\r");
+}
+
 unittest_main()
