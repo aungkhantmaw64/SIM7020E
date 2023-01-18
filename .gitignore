@@ -1,7 +1,2 @@
 .vscode
-Gemfile.lock
-vendor
-.bundle
-unittest_test_BC95NB.cpp.bin
-arduino-cli_0.13.0_Linux_64bit.tar.gz
-.arduino_ci
+.pio
