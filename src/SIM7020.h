@@ -2,7 +2,6 @@
 #define D_SIM7020_H
 
 #include <Arduino.h>
-#include <HardwareSerial.h>
 #include <Client.h>
 
 typedef enum ATResponseStatus
