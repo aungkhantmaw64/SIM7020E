@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Client.h>
 
+#define TX_BUFFER_SIZE 100
 typedef enum ATResponseStatus
 {
     UnknownStatus = -1,
@@ -20,7 +21,7 @@ private:
     int pwrKeyPin_;
     int rtcEintPin_;
     String resBuffer_;
-
+    char txBuffer[TX_BUFFER_SIZE];
     void setEchoOff(void)
     {
         resBuffer_ = "";
@@ -37,7 +38,7 @@ public:
      * @param pwrKeyPin
      * @param rtcEintPin
      */
-    SIM7020(Stream &serial,
+    SIM7020(Stream *serial,
             int resetPin,
             int pwrKeyPin,
             int rtcEintPin);
@@ -47,7 +48,7 @@ public:
      * @param serial
      * @param resetPin
      */
-    SIM7020(Stream &serial,
+    SIM7020(Stream *serial,
             int resetPin);
     /**
      * @brief Destroy the SIM7020 object

@@ -4,6 +4,7 @@
 
 #include <assert.h>
 #include "TimeService.h"
+#include <cstring>
 
 #define SIM7020_DEFAULT_BAUD 115200
 #define TYPICAL_IMEI_LENGTH 15
@@ -11,34 +12,35 @@
 
 static inline void delay_ms(unsigned long milliseconds)
 {
-    unsigned long startTime = getMillis();
-    while ((getMillis() - startTime) < milliseconds)
+    unsigned long startTime = millis();
+    while ((millis() - startTime) < milliseconds)
         ;
 }
 
-SIM7020::SIM7020(Stream &serial, int resetPin, int pwrKeyPin, int rtcEintPin)
-    : serial_(&serial),
+SIM7020::SIM7020(Stream *serial, int resetPin, int pwrKeyPin, int rtcEintPin)
+    : serial_(serial),
       resetPin_(resetPin),
       pwrKeyPin_(pwrKeyPin),
       rtcEintPin_(rtcEintPin)
 {
-    resBuffer_.reserve(RESPONSE_BUFFER_SIZE);
-    pinMode(pwrKeyPin_, OUTPUT);
 }
 
-SIM7020::SIM7020(Stream &serial, int resetPin)
+SIM7020::SIM7020(Stream *serial, int resetPin)
     : SIM7020(serial, resetPin, -1, -1)
 {
 }
 
 void SIM7020::begin(bool restart)
 {
+    // resBuffer_.reserve(RESPONSE_BUFFER_SIZE);
+    pinMode(resetPin_, OUTPUT);
+    pinMode(pwrKeyPin_, OUTPUT);
+    pinMode(rtcEintPin_, OUTPUT);
     turnPowerOn();
     if (restart)
     {
         hardReset();
     }
-    setEchoOff();
 }
 
 void SIM7020::turnPowerOn(void)
@@ -59,16 +61,21 @@ void SIM7020::hardReset(void)
 void SIM7020::sendATCommand(const char *cmd)
 {
     delay_ms(20);
-    serial_->print(cmd);
-    serial_->print("\r");
+    memset(txBuffer, 0, sizeof(txBuffer));
+    strcpy(txBuffer, cmd);
+    for (int i{0}; i < strlen(txBuffer); i++)
+    {
+        serial_->print(txBuffer[i]);
+    }
+    serial_->print('\r');
     serial_->flush();
 }
 
 ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &responseBufferStorage)
 {
     responseBufferStorage = "";
-    unsigned long startTime = getMillis();
-    while ((getMillis() - startTime) < timeout)
+    unsigned long startTime = millis();
+    while ((millis() - startTime) < timeout)
     {
         if (serial_->available())
         {
@@ -95,6 +102,7 @@ bool SIM7020::ready(void)
 String SIM7020::getIMEI(void)
 {
     resBuffer_ = "";
+    setEchoOff();
     sendATCommand("AT+GSN");
     int ret = waitForResponse(300, resBuffer_);
     switch (ret)
