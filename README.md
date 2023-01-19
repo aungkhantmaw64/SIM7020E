@@ -1,4 +1,4 @@
-# SIMCom SIM7020E [![Arduino CI](https://github.com/aungkhantmaw64/SIM7020E/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/aungkhantmaw64/SIM7020E/actions)
+# SIMCom SIM7020E [![Arduino CI](https://github.com/aungkhantmaw64/SIM7020E/actions/workflows/pio-workflow.yml/badge.svg)](https://github.com/aungkhantmaw64/SIM7020E/actions)
 
 This is the SIMCom SIM7020E Library For Arduino.
 
