@@ -4,5 +4,3 @@ unsigned long getMillis(void)
 {
     return millis();
 }
-
-#endif
