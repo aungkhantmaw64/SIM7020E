@@ -26,7 +26,7 @@ private:
     {
         resBuffer_ = "";
         sendATCommand("ATE0");
-        waitForResponse(300, resBuffer_);
+        waitForResponse(300, &resBuffer_);
     };
 
 public:
@@ -99,7 +99,7 @@ public:
      * @param responseBufferStorage
      * @return ATResponseStatus
      */
-    ATResponseStatus waitForResponse(unsigned long timeout, String &responseBufferStorage);
+    ATResponseStatus waitForResponse(unsigned long timeout, String *responseBufferStorage);
     /**
      * @brief
      *

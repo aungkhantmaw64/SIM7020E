@@ -3,7 +3,6 @@
 #define __ASSERT_USE_STDERR
 
 #include <assert.h>
-#include "TimeService.h"
 #include <cstring>
 
 #define SIM7020_DEFAULT_BAUD 115200
@@ -71,32 +70,31 @@ void SIM7020::sendATCommand(const char *cmd)
     serial_->flush();
 }
 
-ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String &responseBufferStorage)
+ATResponseStatus SIM7020::waitForResponse(unsigned long timeout, String *responseBufferStorage)
 {
-    responseBufferStorage = "";
     unsigned long startTime = millis();
     while ((millis() - startTime) < timeout)
     {
-        if (serial_->available())
+        if (serial_->available() > 0)
         {
             char ch = (char)serial_->read();
             responseBufferStorage += ch;
         }
     }
-    if (responseBufferStorage.length() == 0)
+    if (responseBufferStorage->length() == 0)
         return TimeoutError;
-    else if (responseBufferStorage.lastIndexOf("OK\r\n") != -1)
+    if (responseBufferStorage->lastIndexOf("OK\r\n") != -1)
         return CommandSuccess;
-    else if (responseBufferStorage.lastIndexOf("ERROR\r\n") != -1)
-        return InvalidCommand;
-    else
-        return UnknownStatus;
+    // else if (responseBufferStorage->lastIndexOf("ERROR\r\n") != -1)
+    //     return InvalidCommand;
+    // else
+    //     return UnknownStatus;
 }
 
 bool SIM7020::ready(void)
 {
     sendATCommand("AT");
-    return (CommandSuccess == waitForResponse(300, resBuffer_));
+    return (CommandSuccess == waitForResponse(300, &resBuffer_));
 }
 
 String SIM7020::getIMEI(void)
@@ -104,7 +102,7 @@ String SIM7020::getIMEI(void)
     resBuffer_ = "";
     setEchoOff();
     sendATCommand("AT+GSN");
-    int ret = waitForResponse(300, resBuffer_);
+    int ret = waitForResponse(300, &resBuffer_);
     switch (ret)
     {
     case CommandSuccess:
